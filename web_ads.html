@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adeogun Titus Business Advertisement Services</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color:#f0f0f0;
+            color: #333;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        
+        .container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            margin: auto;
+        }
+        
+        .slide {
+            margin-top: 0%;
+            position: absolute;
+            width: 100%;
+            height: 80%;
+            top: 10%;
+            left: 0%;
+            right: 0%;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            overflow: hidden;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .image-container {
+            height: 60%;
+            overflow: hidden;
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .content {
+            padding: 20px;
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 2em;
+        }
+        
+        h2 {
+            margin: 0 0 15px 0;
+            color: #e74c3c;
+            font-size: 1.5em;
+        }
+        
+        p {
+            margin: 0 0 20px 0;
+            line-height: 1.5;
+            flex-grow: 1;
+            overflow: auto;
+        }
+        
+        .countdown {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .control-btn {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .control-btn.active {
+            background-color: #e74c3c;
+        }
+        
+        .admin-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .admin-panel h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .admin-panel input, .admin-panel textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .admin-panel button {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .admin-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+        }
+    </style>
+</head>
+<body>
+    <h1>ADEOGUN TITUS ADVERTISEMENT SERVICES</h1>
+    <h2><marquee behavior="" direction="">SUBSCRIBE FOR YOUR ADS HERE AT AN AFFORDABLE RATE</marquee></h2>
+    <div class="container" id="slideshow-container">
+        <!-- Slides will be added dynamically -->
+    </div>
+    
+    <div class="controls" id="controls">
+        <!-- Control buttons will be added dynamically -->
+    </div>
+    
+    <button class="admin-toggle" id="admin-toggle">⚙️</button>
+    
+    <div class="admin-panel" id="admin-panel" style="display: none;">
+        <h3>Add New Advertisement</h3>
+        <input type="text" id="ad-title" placeholder="Title">
+        <input type="text" id="ad-subtitle" placeholder="Subtitle">
+        <textarea id="ad-text" placeholder="Advertisement text"></textarea>
+        <input type="text" id="ad-image" placeholder="Image URL">
+        <input type="datetime-local" id="ad-expiry">
+        <button id="add-ad">Add Advertisement</button>
+        
+        <h3>Current Ads</h3>
+        <div id="ads-list">
+            <!-- Ads will be listed here -->
+             WELLCOME
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // advertisements
+            const initialAds = [
+                {
+                    title: "ADEOGUN TITUS WEB SERVICES!",
+                    subtitle: "WEB APPLICATIONS",
+                    text: "Contact us for your business Apps. Please call us today or Message us on WhatsApp: +2348028709054!",
+                    imageUrl: "https://images.",
+                    expiry: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000) // 7 days from now
+                },
+                {
+                    title: "VACANCY! VACANCY!! VACANCY!!!",
+                    subtitle: "House Help needed. Intrested persons should Call us today or Message us on WhatsApp: +2348028709054",
+                    text: "LETS HELP YOU GROW YOUR BUSINESS!",
+                    imageUrl: "https://images.",
+                    expiry: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) // 3 days from now
+                },
+                {
+                    title: "ADMISSION INTO ADEOGUN TITUS TECH INSTITUTE",
+                    subtitle: "Register Now",
+                    text: "Visit Our website for Your Registration. Call us today or Message us on WhatsApp: +2348028709054",
+                    imageUrl: "https://images.",
+                    expiry: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) // 14 days from now
+                },
+                
+                {
+                    title: "Company Driver Needed",
+                    subtitle: "Apply in person or Call us today or Message us on WhatsApp: +2348028709054",
+                    text: "The best qualified candidte will be selected",
+                    imageUrl: "https://images.",
+                    expiry: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) // 3 days from now
+                },
+            ];
+            
+            let advertisements = JSON.parse(localStorage.getItem('advertisements')) || initialAds;
+            let currentSlide = 0;
+            let slideInterval;
+            const slideDuration = 5000; // 5 seconds per slide
+            
+            // Initialize the slideshow
+            function initSlideshow() {
+                const container = document.getElementById('slideshow-container');
+                const controls = document.getElementById('controls');
+                
+                // Clear existing slides and controls
+                container.innerHTML = '';
+                controls.innerHTML = '';
+                
+                // Create slides and controls for each advertisement
+                advertisements.forEach((ad, index) => {
+                    // Create slide element
+                    const slide = document.createElement('div');
+                    slide.className = `slide ${index === 0 ? 'active' : ''}`;
+                    
+                    // Create image container
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'image-container';
+                    
+                    const image = document.createElement('img');
+                    image.src = ad.imageUrl;
+                    image.alt = ad.title;
+                    
+                    imageContainer.appendChild(image);
+                    slide.appendChild(imageContainer);
+                    
+                    // Create content container
+                    const content = document.createElement('div');
+                    content.className = 'content';
+                    
+                    const title = document.createElement('h1');
+                    title.textContent = ad.title;
+                    
+                    const subtitle = document.createElement('h2');
+                    subtitle.textContent = ad.subtitle;
+                    
+                    const text = document.createElement('p');
+                    text.textContent = ad.text;
+                    
+                    const countdown = document.createElement('div');
+                    countdown.className = 'countdown';
+                    countdown.id = `countdown-${index}`;
+                    
+                    content.appendChild(title);
+                    content.appendChild(subtitle);
+                    content.appendChild(text);
+                    content.appendChild(countdown);
+                    slide.appendChild(content);
+                    
+                    container.appendChild(slide);
+                    
+                    // Create control button
+                    const controlBtn = document.createElement('button');
+                    controlBtn.className = `control-btn ${index === 0 ? 'active' : ''}`;
+                    controlBtn.addEventListener('click', () => goToSlide(index));
+                    controls.appendChild(controlBtn);
+                });
+                
+                // Start the slideshow
+                startSlideshow();
+                updateCountdowns();
+            }
+            
+            // Start the automatic slideshow
+            function startSlideshow() {
+                if (advertisements.length > 1) {
+                    slideInterval = setInterval(nextSlide, slideDuration);
+                }
+            }
+            
+            // Go to next slide
+            function nextSlide() {
+                goToSlide((currentSlide + 1) % advertisements.length);
+            }
+            
+            // Go to specific slide
+            function goToSlide(index) {
+                const slides = document.querySelectorAll('.slide');
+                const buttons = document.querySelectorAll('.control-btn');
+                
+                slides[currentSlide].classList.remove('active');
+                buttons[currentSlide].classList.remove('active');
+                
+                currentSlide = index;
+                
+                slides[currentSlide].classList.add('active');
+                buttons[currentSlide].classList.add('active');
+                
+                // Reset the interval when manually changing slides
+                clearInterval(slideInterval);
+                startSlideshow();
+            }
+            
+            // Update all countdown timers
+            function updateCountdowns() {
+                advertisements.forEach((ad, index) => {
+                    updateCountdown(index, ad.expiry);
+                });
+                
+                setTimeout(updateCountdowns, 1000); // Update every second
+            }
+            
+            // Update a single countdown timer
+            function updateCountdown(index, expiryDate) {
+                const countdownElement = document.getElementById(`countdown-${index}`);
+                if (!countdownElement) return;
+                
+                const now = new Date();
+                const expiry = new Date(expiryDate);
+                
+                // If the ad has expired
+                if (now >= expiry) {
+                    countdownElement.textContent = "EXPIRED";
+                    return;
+                }
+                
+                // Calculate time remaining
+                const diff = expiry - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                countdownElement.textContent = `Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+            
+            // Admin panel functionality
+            const adminToggle = document.getElementById('admin-toggle');
+            const adminPanel = document.getElementById('admin-panel');
+            
+            adminToggle.addEventListener('click', () => {
+                adminPanel.style.display = adminPanel.style.display === 'none' ? 'block' : 'none';
+                updateAdsList();
+            });
+            
+            document.getElementById('add-ad').addEventListener('click', () => {
+                const title = document.getElementById('ad-title').value;
+                const subtitle = document.getElementById('ad-subtitle').value;
+                const text = document.getElementById('ad-text').value;
+                const imageUrl = document.getElementById('ad-image').value;
+                const expiry = document.getElementById('ad-expiry').value;
+                
+                if (title && subtitle && text && imageUrl && expiry) {
+                    const newAd = {
+                        title,
+                        subtitle,
+                        text,
+                        imageUrl,
+                        expiry: new Date(expiry)
+                    };
+                    
+                    advertisements.push(newAd);
+                    localStorage.setItem('advertisements', JSON.stringify(advertisements));
+                    
+                    // Clear form
+                    document.getElementById('ad-title').value = '';
+                    document.getElementById('ad-subtitle').value = '';
+                    document.getElementById('ad-text').value = '';
+                    document.getElementById('ad-image').value = '';
+                    document.getElementById('ad-expiry').value = '';
+                    
+                    // Reinitialize slideshow
+                    initSlideshow();
+                    updateAdsList();
+                } else {
+                    alert('Please fill in all fields');
+                }
+            });
+            
+            // Update the ads list in admin panel
+            function updateAdsList() {
+                const adsList = document.getElementById('ads-list');
+                adsList.innerHTML = '';
+                
+                if (advertisements.length === 0) {
+                    adsList.innerHTML = '<p>No advertisements added yet.</p>';
+                    return;
+                }
+                
+                advertisements.forEach((ad, index) => {
+                    const adElement = document.createElement('div');
+                    adElement.style.marginBottom = '10px';
+                    adElement.style.padding = '10px';
+                    adElement.style.border = '1px solid #ddd';
+                    adElement.style.borderRadius = '5px';
+                    
+                    const title = document.createElement('strong');
+                    title.textContent = ad.title;
+                    
+                    const expiry = document.createElement('div');
+                    expiry.textContent = `Expires: ${new Date(ad.expiry).toLocaleString()}`;
+                    expiry.style.fontSize = '0.8em';
+                    expiry.style.color = '#666';
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.style.marginLeft = '10px';
+                    deleteBtn.style.background = '#e74c3c';
+                    deleteBtn.style.color = 'white';
+                    deleteBtn.style.border = 'none';
+                    deleteBtn.style.padding = '3px 8px';
+                    deleteBtn.style.borderRadius = '3px';
+                    deleteBtn.style.cursor = 'pointer';
+                    deleteBtn.addEventListener('click', () => deleteAd(index));
+                    
+                    adElement.appendChild(title);
+                    adElement.appendChild(document.createElement('br'));
+                    adElement.appendChild(expiry);
+                    adElement.appendChild(deleteBtn);
+                    
+                    adsList.appendChild(adElement);
+                });
+            }
+            
+            // Delete an advertisement
+            function deleteAd(index) {
+                if (confirm('Are you sure you want to delete this advertisement?')) {
+                    advertisements.splice(index, 1);
+                    localStorage.setItem('advertisements', JSON.stringify(advertisements));
+                    initSlideshow();
+                    updateAdsList();
+                }
+            }
+            
+            // Initialize the slideshow on page load
+            initSlideshow();
+        });
+    </script>
+</body>
+</html>
